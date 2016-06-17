@@ -58,10 +58,6 @@ class Laser
     uint32_t get_laser_current() {return xadc.read(LASER_CURRENT_CHANNEL);}
     uint32_t get_laser_power()   {return xadc.read(LASER_POWER_CHANNEL);}
 
-    std::tuple<uint32_t, uint32_t> get_monitoring() {
-        return std::make_tuple(get_laser_current(), get_laser_power());
-    }
-
     std::tuple<bool, float, float> get_status() {
         float current = (0.0001/21.) * float(get_laser_current());
         float power = float(get_laser_power());

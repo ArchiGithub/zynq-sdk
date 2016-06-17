@@ -86,7 +86,7 @@ SHA = $(shell cat $(SHA_FILE))
 TCP_SERVER_DIR = $(TMP)/$(NAME).tcp-server
 TCP_SERVER = $(TCP_SERVER_DIR)/tmp/kserverd
 SERVER_CONFIG = projects/$(NAME)/drivers.yml
-TCP_SERVER_SHA = master
+TCP_SERVER_SHA = develop
 TCP_SERVER_VENV = $(TMP)/$(NAME).tcp_server_venv
 TCP_SERVER_MIDDLEWARE = $(TMP)/$(NAME).middleware
 
@@ -259,6 +259,7 @@ devicetree.dtb: uImage $(TMP)/$(NAME).tree/system.dts
 $(TCP_SERVER_DIR): 
 	git clone https://github.com/Koheron/tcp-server.git $(TCP_SERVER_DIR)
 	cd $(TCP_SERVER_DIR) && git checkout $(TCP_SERVER_SHA)
+	cp -R $(TCP_SERVER_DIR)/apis/python/koheron_tcp_client $(TMP)/app/api_app
 	echo `cd $(TCP_SERVER_DIR) && git rev-parse HEAD` > $(TCP_SERVER_DIR)/VERSION
 
 $(TCP_SERVER_DIR)/requirements.txt: $(TCP_SERVER_DIR)
@@ -301,9 +302,10 @@ $(HTTP_API_DRIVERS_DIR)/%: drivers/%/__init__.py
 	mkdir -p $@
 	cp $< $@/__init__.py
 
-app: $(METADATA) $(addprefix $(HTTP_API_DRIVERS_DIR)/, $(HTTP_API_DRIVERS))
+app: $(METADATA) $(addprefix $(HTTP_API_DRIVERS_DIR)/, $(HTTP_API_DRIVERS)) $(TCP_SERVER_DIR)
 	touch $(HTTP_API_DRIVERS_DIR)/__init__.py 
 	mkdir -p $(TMP)/app/api_app
+	cp -R $(TCP_SERVER_DIR)/apis/python/koheron_tcp_client $(TMP)/app/api_app
 	cp -R os/api/. $(TMP)/app/api_app
 	cp $(TMP)/metadata.json $(TMP)/app
 	cp os/wsgi.py $(TMP)/app

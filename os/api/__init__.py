@@ -11,7 +11,7 @@ import yaml
 from distutils.dir_util import copy_tree
 
 from flask import Flask, render_template, request, url_for
-from koheron_tcp_client import KClient
+from drivers.koheron_tcp_client import KClient
 from drivers.common import Common
 from drivers.laser import Laser
 
